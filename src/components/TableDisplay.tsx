@@ -8,13 +8,14 @@ export default function TableDisplay({ supplied_id, table_title, columns }: Prop
     return (
         <table id={supplied_id}>
             <caption>{table_title}</caption>
-            <thead>
+            <thead id={`${supplied_id}_head`}>
                 <tr>
                     {columns.map((column, index) => (
                         <th key={index}>{column}</th>
                     ))}
                 </tr>
-            </thead> 
+            </thead>
+            <tbody id={`${supplied_id}_body`}/>
         </table>
     )
 };

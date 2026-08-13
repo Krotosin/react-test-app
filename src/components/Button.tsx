@@ -9,6 +9,7 @@ export default function Button({ supplied_id, supplied_type, supplied_label }: P
         <>
         <button id={supplied_id} type={supplied_type}>
             <span id="button_text">{supplied_label}</span>
+            <span id="spinner" className="spinner" aria-hidden="true"></span>
         </button>
         </>
     )

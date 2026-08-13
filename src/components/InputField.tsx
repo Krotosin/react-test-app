@@ -9,7 +9,7 @@ export default function InputField({ supplied_id, supplied_label, supplied_type,
     return (
         <div>
             <label htmlFor={supplied_id}>{supplied_label}</label>
-            <input id={supplied_id} name={supplied_id} type={supplied_type} required={isRequired} />
+            <input id={supplied_id} type={supplied_type} required={isRequired} />
         </div>
     );
 }
