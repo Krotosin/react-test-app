@@ -1,3 +1,5 @@
+import "../styles/table.css"
+
 type Props = {
     supplied_id: string;
     table_title: string;

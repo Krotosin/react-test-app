@@ -1,12 +1,14 @@
-type Props = {
-    fieldset_title: string;
+import "../styles/fieldset.css"
+
+type fieldsetProps = {
+    fieldsetTitle: string;
     children: React.ReactNode;
 };
 
-export default function Fieldset({ fieldset_title, children }: Props) {
+export default function Fieldset({ fieldsetTitle, children }: fieldsetProps) {
     return (
         <fieldset>
-            <legend>{fieldset_title}</legend>
+            <legend>{fieldsetTitle}</legend>
             {children}
         </fieldset>
     )
