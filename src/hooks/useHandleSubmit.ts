@@ -12,7 +12,7 @@ export default function useHandleSubmit() {
       } = useFetchEmployeeList();
 
     const { 
-        addReservation,
+        addReservationToLocalStorage,
         reservationList,
         isLoading: reservationListLoading,
         error: reservationListError
@@ -62,7 +62,6 @@ export default function useHandleSubmit() {
                 apiEmployee.email === employeeEmail
              );
             
-            console.log("Found employee:", employee);
             if(!employee) {
                 setIsSubmitting(false);
                 setSubmitSuccess(false);
@@ -71,7 +70,7 @@ export default function useHandleSubmit() {
                 return;
             }
 
-            await addReservation({
+            await addReservationToLocalStorage({
                 employeeId,
                 employeeName,
                 employeeEmail,

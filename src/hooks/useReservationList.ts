@@ -18,26 +18,15 @@ export default function useReservationList() {
         }
     }, []);
 
-    function addReservation(deskReservation: reservation) {
+    useEffect(() => {
+        localStorage.setItem('reservations', JSON.stringify(reservationList));
+    }, [reservationList]);
+
+    function addReservationToLocalStorage(newReservation: reservation) {
         try {
             setIsLoading(true);
             setError(null);
-            
-            const newReservation: reservation = {
-                employeeId: deskReservation.employeeId,
-                employeeName: deskReservation.employeeName,
-                employeeEmail: deskReservation.employeeEmail,
-                chosenDesk: deskReservation.chosenDesk,
-                reservationDate: deskReservation.reservationDate
-            };
-
-            setReservationList((prevReservationList) => {
-                const updatedReservationList = [...prevReservationList, newReservation];
-
-                localStorage.setItem('reservations', JSON.stringify(updatedReservationList));
-
-                return updatedReservationList;
-            });
+            setReservationList(prevReservationList => [...prevReservationList, newReservation]);
         } catch (error) {
             setError("Błąd w dodawaniu nowej rezerwacji.");
                 console.error(error);
@@ -48,7 +37,7 @@ export default function useReservationList() {
 
     return {
         reservationList,
-        addReservation,
+        addReservationToLocalStorage,
         isLoading,
         setIsLoading,
         error

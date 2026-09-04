@@ -5,6 +5,5 @@ export default async function fetchEmployeeList() {
         id: apiData.id, 
         name: apiData.name, 
         email: apiData.email}))
-    console.log("Fetch is working:", employeeList);
     return employeeList;
 };

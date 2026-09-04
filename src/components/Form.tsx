@@ -1,11 +1,12 @@
 import "../styles/buttonSpinner.css"
+import "../styles/table.css"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-import TableDisplay from "./TableDisplay.tsx";
 import Fieldset from "./Fieldset.tsx";
-
+import ReservationTable from "./ReservationTable.tsx";
 import useHandleSubmit from "../hooks/useHandleSubmit.ts";
+import useReservationList from "../hooks/useReservationList.ts";
 
 type formProps = {
     formId: string;
@@ -14,6 +15,10 @@ type formProps = {
 
 export default function Form({ formId, formTitle }: formProps) {
 
+useEffect(() => {
+  localStorage.clear();
+}, [])
+
   const [ id, setId ] = useState<number>();
   const [ name, setName ] = useState<string>();
   const [ email, setEmail ] = useState<string>();
@@ -21,6 +26,7 @@ export default function Form({ formId, formTitle }: formProps) {
   const [ date, setDate ] = useState<Date>();
 
   const { handleSubmit, isSubmitting } = useHandleSubmit();
+  const { reservationList } = useReservationList();
 
   const inputChoiceList = [
     ['Piętro 1.', 'Biurko 1.1', 'Biurko 1.2', 'Biurko 1.3'], 
@@ -137,11 +143,7 @@ export default function Form({ formId, formTitle }: formProps) {
       </Fieldset>
       <br/>
       <br/>
-      <TableDisplay 
-      supplied_id={'reservation_table'}
-      table_title={'Tabela rezerwacji'}
-      columns={['Numer pracownika', 'Imię i nazwisko', 'Adres e-mail', 'Wybrane biurko', 'Data rezerwacji']}
-      />      
+      <ReservationTable/>
     </>
   );
 };
