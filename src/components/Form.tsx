@@ -1,12 +1,11 @@
 import "../styles/buttonSpinner.css"
 import "../styles/table.css"
+import "../styles/fieldset.css"
 
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 
-import Fieldset from "./Fieldset.tsx";
 import ReservationTable from "./ReservationTable.tsx";
 import useHandleSubmit from "../hooks/useHandleSubmit.ts";
-import useReservationList from "../hooks/useReservationList.ts";
 
 type formProps = {
     formId: string;
@@ -15,18 +14,13 @@ type formProps = {
 
 export default function Form({ formId, formTitle }: formProps) {
 
-useEffect(() => {
-  localStorage.clear();
-}, [])
-
   const [ id, setId ] = useState<number>();
   const [ name, setName ] = useState<string>();
   const [ email, setEmail ] = useState<string>();
   const [ desk, setDesk] = useState<string>();
-  const [ date, setDate ] = useState<Date>();
+  const [ date, setDate ] = useState<string>();
 
   const { handleSubmit, isSubmitting } = useHandleSubmit();
-  const { reservationList } = useReservationList();
 
   const inputChoiceList = [
     ['Piętro 1.', 'Biurko 1.1', 'Biurko 1.2', 'Biurko 1.3'], 
@@ -34,10 +28,11 @@ useEffect(() => {
     ['Piętro 3.', 'Biurko 3.1', 'Biurko 3.2', 'Biurko 3.3', 'Biurko 3.4'],
     ['Piętro 4.', 'Biurko 4.1', 'Biurko 4.2', 'Biurko 4.3', 'Biurko 4.4', 'Biurko 4.5', 'Biurko 4.6'],      
   ];
-  
+
   return (
     <>
-      <Fieldset fieldsetTitle={formTitle}>
+      <fieldset>
+        <legend>{formTitle}</legend>
         <form id={formId} name={formTitle} onSubmit={handleSubmit}>
           <label htmlFor="employee_id">Numer pracownika:</label>
           <input
@@ -111,9 +106,10 @@ useEffect(() => {
             id='reservation_date'
             name="reservation_date"
             type='date'
+            value={date}
             required={true}
             onChange={(e) => {
-              setDate(new Date(e.target.value));
+              setDate(e.target.value);
             }}
           />
           
@@ -140,7 +136,7 @@ useEffect(() => {
             )}
           </button>
         </form>
-      </Fieldset>
+      </fieldset>
       <br/>
       <br/>
       <ReservationTable/>

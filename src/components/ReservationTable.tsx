@@ -1,9 +1,6 @@
-import useReservationList from "../hooks/useReservationList.ts";
 import type { reservation } from "../utils/reservationType.ts";
 
 export default function ReservationTable(){
-    
-    const { reservationList } = useReservationList();
 
     const tableColumns = [
         'Numer pracownika', 
@@ -13,10 +10,9 @@ export default function ReservationTable(){
         'Data rezerwacji'];
     const tableTitle = "Tabela rezerwacji"
     const tableId = "reservation_table"
-
-    const localStorageContent = localStorage.getItem("reservations")
-    const tableContent = JSON.parse(localStorageContent);
-
+    
+    const tableContent = 
+        JSON.parse(localStorage.getItem("reservations") ?? "")
     return (
             <>
                 <table id={tableId}>
@@ -42,5 +38,5 @@ export default function ReservationTable(){
                    </tbody>
                 </table>
             </>
-    )
+    );
 }

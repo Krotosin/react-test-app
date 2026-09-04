@@ -3,5 +3,5 @@ export type reservation = {
     employeeName: string | undefined,
     employeeEmail: string | undefined,
     chosenDesk: string | undefined,
-    reservationDate: Date | undefined,
+    reservationDate: string | undefined,
 };

@@ -6,38 +6,27 @@ export default function useReservationList() {
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
     const [ error, setError ] = useState<string | null>(null);
 
-    useEffect(() => {
-        try {
-            const storedReservations = localStorage.getItem('reservations');
-            if (storedReservations) {
-                setReservationList(JSON.parse(storedReservations));
-            }
-        } catch(error) {
-            setError("Wystąpił błąd w odczytywaniu listy rezerwacji.")
-            console.error(error);
-        }
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('reservations', JSON.stringify(reservationList));
-    }, [reservationList]);
-
-    function addReservationToLocalStorage(newReservation: reservation) {
+    function addReservation(newReservation: reservation) {
         try {
             setIsLoading(true);
             setError(null);
-            setReservationList(prevReservationList => [...prevReservationList, newReservation]);
-        } catch (error) {
+            setReservationList(prev => [...prev, newReservation]);
+        } catch (err) {
             setError("Błąd w dodawaniu nowej rezerwacji.");
-                console.error(error);
+                console.error(err);
         } finally {
             setIsLoading(false);
         }
     };
+    
+    useEffect(() => {
+        localStorage.setItem('reservations', JSON.stringify(reservationList));
+    }, [reservationList]);
 
     return {
         reservationList,
-        addReservationToLocalStorage,
+        setReservationList,
+        addReservation,
         isLoading,
         setIsLoading,
         error

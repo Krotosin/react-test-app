@@ -12,7 +12,7 @@ export default function useHandleSubmit() {
       } = useFetchEmployeeList();
 
     const { 
-        addReservationToLocalStorage,
+        addReservation,
         reservationList,
         isLoading: reservationListLoading,
         error: reservationListError
@@ -33,6 +33,7 @@ export default function useHandleSubmit() {
     async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
 
+        // Checking if API fetch and localStorage handling is complete
         if(!isReady) {
             setSubmitError(new Error("API i/lub reservationList nie są gotowe."));
             return;
@@ -41,6 +42,7 @@ export default function useHandleSubmit() {
         setSubmitError(null);
         setSubmitSuccess(false);
 
+        // Main body of function
         try {
             const form = event.currentTarget;
             const formData = new FormData(form);
@@ -53,24 +55,52 @@ export default function useHandleSubmit() {
             const employeeEmail = formData.get("employee_email") as string;
             const chosenDesk = formData.get("chosen_desk") as string;
 
-            const reservationDateRaw = formData.get("reservation_date") as string;
-            const reservationDate = reservationDateRaw ? new Date(reservationDateRaw) : undefined;
+            const reservationDate = formData.get("reservation_date") as string;
             
-            const employee = apiEmployeeList.find( apiEmployee =>
+            // Checking if submitted employee data matches employee list
+            const employeeCheck = apiEmployeeList.find( apiEmployee =>
                 apiEmployee.id === employeeId && 
                 apiEmployee.name === employeeName &&
                 apiEmployee.email === employeeEmail
-             );
-            
-            if(!employee) {
+            );
+            if(!employeeCheck) {
                 setIsSubmitting(false);
                 setSubmitSuccess(false);
                 setSubmitError(new Error("Niepoprawne dane."));
                 alert("Niepoprawne dane.");
                 return;
-            }
+            };
 
-            await addReservationToLocalStorage({
+            //Check to prevent multiple reservations for the same desk on the same day
+            const reservationDateCheck = reservationList.find( reservation =>
+                reservation.chosenDesk === chosenDesk && 
+                reservation.reservationDate === reservationDate
+            );
+            if(reservationDateCheck){
+                setIsSubmitting(false);
+                setSubmitSuccess(false);
+                setSubmitError(new Error("Próba rezerwacji biurka już zarezerwowanego."));
+                alert("To biurko jest już zarezerwowane na ten dzień.");
+                return;
+            };
+
+            //Check to prevent an employee from reserving multiple desks for one day
+            const reservationEmployeeCheck = reservationList.find( reservation =>
+                reservation.employeeId === employeeId && 
+                reservation.employeeName === employeeName &&
+                reservation.employeeEmail === employeeEmail &&
+                reservation.reservationDate === reservationDate
+            );
+            if(reservationEmployeeCheck){
+                setIsSubmitting(false);
+                setSubmitSuccess(false);
+                setSubmitError(new Error("Próba rezerwacji dwóch biurek w jeden dzień"));
+                alert("Nie można zarezerwować dwóch biurek na ten sam dzień.");
+                return;
+            };
+
+            // Adding reservation to reservationList
+            await addReservation({
                 employeeId,
                 employeeName,
                 employeeEmail,
@@ -78,6 +108,7 @@ export default function useHandleSubmit() {
                 reservationDate
             });
             
+            // Simulating loading
             await sleep(1000);
             
             setSubmitSuccess(true);
